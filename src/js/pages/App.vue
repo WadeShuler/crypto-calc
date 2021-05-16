@@ -26,11 +26,11 @@
                         <form>
                             <div class="mb-3">
                                 <label for="numOfSharesInput" class="form-label"># of Shares</label>
-                                <input type="number" inputmode="numeric" pattern="[0-9]*" id="numOfSharesInput" class="form-control" v-model="estimateProfit.numShares" placeholder="125" />
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" id="numOfSharesInput" class="form-control" v-model="estimateProfit.numShares" placeholder="125" />
                             </div>
                             <div class="mb-3">
                                 <label for="projectedPriceInput" class="form-label">Projected Price</label>
-                                <input type="number" inputmode="numeric" pattern="[0-9]*" id="projectedPriceInput" class="form-control" v-model="estimateProfit.projectedPrice" placeholder="2.50" />
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" id="projectedPriceInput" class="form-control" v-model="estimateProfit.projectedPrice" placeholder="2.50" />
                             </div>
                             <div class="mt-4">
                                 <p class="text-white">
@@ -46,11 +46,11 @@
                         <form>
                             <div class="mb-3">
                                 <label for="amountToSpendInput" class="form-label">Amount</label>
-                                <input type="number" inputmode="numeric" pattern="[0-9]*" id="amountToSpendInput" class="form-control" v-model="estimateShares.amountToSpend" placeholder="100" />
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" id="amountToSpendInput" class="form-control" v-model="estimateShares.amountToSpend" placeholder="100" />
                             </div>
                             <div class="mb-3">
                                 <label for="pricePerShareInput" class="form-label">Price per Share</label>
-                                <input type="number" inputmode="numeric" pattern="[0-9]*" id="pricePerShareInput" class="form-control" v-model="estimateShares.pricePerShare" placeholder="2.50" />
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" id="pricePerShareInput" class="form-control" v-model="estimateShares.pricePerShare" placeholder="2.50" />
                             </div>
 
                             <div class="mt-4">
