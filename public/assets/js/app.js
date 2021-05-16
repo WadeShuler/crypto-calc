@@ -15021,6 +15021,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "number",
     inputmode: "decimal",
     pattern: "[0-9]*",
+    min: "0.0",
     id: "numOfSharesInput",
     "class": "form-control",
     "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
@@ -15033,6 +15034,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "number",
     inputmode: "decimal",
     pattern: "[0-9]*",
+    min: "0.0",
     id: "projectedPriceInput",
     "class": "form-control",
     "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
@@ -15047,6 +15049,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "number",
     inputmode: "decimal",
     pattern: "[0-9]*",
+    min: "0.0",
     id: "amountToSpendInput",
     "class": "form-control",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
@@ -15059,6 +15062,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "number",
     inputmode: "decimal",
     pattern: "[0-9]*",
+    min: "0.0",
     id: "pricePerShareInput",
     "class": "form-control",
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
