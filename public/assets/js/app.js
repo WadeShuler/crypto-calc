@@ -14757,6 +14757,7 @@ var formatter = new Intl.NumberFormat('en-US', {
     return {
       'estimateProfitResult': '$0.00',
       'numOfSharesResult': '0',
+      'numOfSharesBoughtResult': '0',
       'estimateProfit': {
         'numShares': '',
         'projectedPrice': ''
@@ -14764,6 +14765,10 @@ var formatter = new Intl.NumberFormat('en-US', {
       'estimateShares': {
         'amountToSpend': '',
         'pricePerShare': ''
+      },
+      'calculatePricePerShare': {
+        'amountSpent': '',
+        'numSharesBought': ''
       }
     };
   },
@@ -14783,6 +14788,12 @@ var formatter = new Intl.NumberFormat('en-US', {
       deep: true,
       handler: function handler() {
         this.recalculateEstimatedShares();
+      }
+    },
+    calculatePricePerShare: {
+      deep: true,
+      handler: function handler() {
+        this.recalculatePricePerShare();
       }
     }
   },
@@ -14826,6 +14837,14 @@ var formatter = new Intl.NumberFormat('en-US', {
       } else {
         this.numOfSharesResult = 0;
       }
+    },
+    recalculatePricePerShare: function recalculatePricePerShare() {
+      if (this.calculatePricePerShare.amountSpent > 0 && this.calculatePricePerShare.numSharesBought > 0) {
+        var res = this.calculatePricePerShare.amountSpent / this.calculatePricePerShare.numSharesBought;
+        this.numOfSharesBoughtResult = res;
+      } else {
+        this.numOfSharesBoughtResult = 0;
+      }
     }
   }
 });
@@ -14867,26 +14886,38 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("
   role: "presentation"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("button", {
   "class": "nav-link active",
-  id: "profitEstimateTab",
-  "data-bs-toggle": "tab",
-  "data-bs-target": "#profitEstimatePane",
-  type: "button",
-  role: "tab",
-  "aria-controls": "profitEstimatePane",
-  "aria-selected": "true"
-}, " Projection ")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", {
-  "class": "nav-item",
-  role: "presentation"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("button", {
-  "class": "nav-link",
   id: "sharesEstimateTab",
   "data-bs-toggle": "tab",
   "data-bs-target": "#sharesEstimatePane",
   type: "button",
   role: "tab",
   "aria-controls": "sharesEstimatePane",
+  "aria-selected": "true"
+}, " Shares ")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", {
+  "class": "nav-item",
+  role: "presentation"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("button", {
+  "class": "nav-link",
+  id: "profitEstimateTab",
+  "data-bs-toggle": "tab",
+  "data-bs-target": "#profitEstimatePane",
+  type: "button",
+  role: "tab",
+  "aria-controls": "profitEstimatePane",
   "aria-selected": "false"
-}, " Shares ")])])], -1
+}, " Projection ")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", {
+  "class": "nav-item",
+  role: "presentation"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("button", {
+  "class": "nav-link",
+  id: "reverseTab",
+  "data-bs-toggle": "tab",
+  "data-bs-target": "#reversePane",
+  type: "button",
+  role: "tab",
+  "aria-controls": "reversePane",
+  "aria-selected": "false"
+}, " Reverse ")])])], -1
 /* HOISTED */
 );
 
@@ -14899,12 +14930,12 @@ var _hoisted_6 = {
 };
 var _hoisted_7 = {
   "class": "tab-pane fade show active p-4 text-white",
-  id: "profitEstimatePane",
+  id: "sharesEstimatePane",
   role: "tabpanel",
-  "aria-labelledby": "home-tab"
+  "aria-labelledby": "sharesEstimateTab"
 };
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "How much will my shares be worth if it hits x amount?", -1
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "How many shares can I buy with x amount?", -1
 /* HOISTED */
 );
 
@@ -14913,9 +14944,9 @@ var _hoisted_9 = {
 };
 
 var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
-  "for": "numOfSharesInput",
+  "for": "amountToSpendInput",
   "class": "form-label"
-}, "# of Shares", -1
+}, "Amount", -1
 /* HOISTED */
 );
 
@@ -14924,9 +14955,9 @@ var _hoisted_11 = {
 };
 
 var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
-  "for": "projectedPriceInput",
+  "for": "pricePerShareInput",
   "class": "form-label"
-}, "Projected Price", -1
+}, "Price per Share", -1
 /* HOISTED */
 );
 
@@ -14942,72 +14973,25 @@ var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
 );
 
 var _hoisted_16 = {
-  "class": "ps-2 text-green"
-};
-var _hoisted_17 = {
-  "class": "tab-pane fade p-4 text-white",
-  id: "sharesEstimatePane",
-  role: "tabpanel",
-  "aria-labelledby": "profile-tab"
-};
-
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "How many shares can I buy with x amount?", -1
-/* HOISTED */
-);
-
-var _hoisted_19 = {
-  "class": "mb-3"
-};
-
-var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
-  "for": "amountToSpendInput",
-  "class": "form-label"
-}, "Amount", -1
-/* HOISTED */
-);
-
-var _hoisted_21 = {
-  "class": "mb-3"
-};
-
-var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
-  "for": "pricePerShareInput",
-  "class": "form-label"
-}, "Price per Share", -1
-/* HOISTED */
-);
-
-var _hoisted_23 = {
-  "class": "mt-4"
-};
-var _hoisted_24 = {
-  "class": "text-white"
-};
-
-var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("strong", null, "Result:", -1
-/* HOISTED */
-);
-
-var _hoisted_26 = {
   id: "numOfSharesResult",
   "class": "ps-2 text-green"
 };
-var _hoisted_27 = {
+var _hoisted_17 = {
   key: 0,
   "class": "ps-2"
 };
 
-var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("i", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("i", {
   "class": "fas fa-copy"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_29 = {
+var _hoisted_19 = {
   key: 1
 };
 
-var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("i", {
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("i", {
   "class": "fas fa-copy",
   style: {
     "opacity": "0"
@@ -15016,69 +15000,192 @@ var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
 /* HOISTED */
 );
 
+var _hoisted_21 = {
+  "class": "tab-pane fade show p-4 text-white",
+  id: "profitEstimatePane",
+  role: "tabpanel",
+  "aria-labelledby": "profitEstimateTab"
+};
+
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "How much will my shares be worth if it hits x amount?", -1
+/* HOISTED */
+);
+
+var _hoisted_23 = {
+  "class": "mb-3"
+};
+
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
+  "for": "numOfSharesInput",
+  "class": "form-label"
+}, "# of Shares", -1
+/* HOISTED */
+);
+
+var _hoisted_25 = {
+  "class": "mb-3"
+};
+
+var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
+  "for": "projectedPriceInput",
+  "class": "form-label"
+}, "Projected Price", -1
+/* HOISTED */
+);
+
+var _hoisted_27 = {
+  "class": "mt-4"
+};
+var _hoisted_28 = {
+  "class": "text-white"
+};
+
+var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("strong", null, "Result:", -1
+/* HOISTED */
+);
+
+var _hoisted_30 = {
+  "class": "ps-2 text-green"
+};
+var _hoisted_31 = {
+  "class": "tab-pane fade p-4 text-white",
+  id: "reversePane",
+  role: "tabpanel",
+  "aria-labelledby": "reverseTab"
+};
+
+var _hoisted_32 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "Reverse calculate the price per share after purchase.", -1
+/* HOISTED */
+);
+
+var _hoisted_33 = {
+  "class": "mb-3"
+};
+
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
+  "for": "amountSpentInput",
+  "class": "form-label"
+}, "Amount", -1
+/* HOISTED */
+);
+
+var _hoisted_35 = {
+  "class": "mb-3"
+};
+
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("label", {
+  "for": "numOfSharesBoughtInput",
+  "class": "form-label"
+}, "# of Shares", -1
+/* HOISTED */
+);
+
+var _hoisted_37 = {
+  "class": "mt-4"
+};
+var _hoisted_38 = {
+  "class": "text-white"
+};
+
+var _hoisted_39 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("strong", null, "Result:", -1
+/* HOISTED */
+);
+
+var _hoisted_40 = {
+  id: "numOfSharesBoughtResult",
+  "class": "ps-2 text-green"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [_hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("form", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
     type: "number",
     inputmode: "decimal",
     pattern: "[0-9]*",
     min: "0.0",
-    id: "numOfSharesInput",
-    "class": "form-control",
-    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-      return $data.estimateProfit.numShares = $event;
-    }),
-    placeholder: "125"
-  }, null, 512
-  /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateProfit.numShares]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-    type: "number",
-    inputmode: "decimal",
-    pattern: "[0-9]*",
-    min: "0.0",
-    id: "projectedPriceInput",
-    "class": "form-control",
-    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-      return $data.estimateProfit.projectedPrice = $event;
-    }),
-    placeholder: "2.50"
-  }, null, 512
-  /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateProfit.projectedPrice]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.estimateProfitResult), 1
-  /* TEXT */
-  )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("form", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_19, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
-    type: "number",
-    inputmode: "decimal",
-    pattern: "[0-9]*",
-    min: "0.0",
     id: "amountToSpendInput",
     "class": "form-control",
-    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
       return $data.estimateShares.amountToSpend = $event;
     }),
     placeholder: "100"
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateShares.amountToSpend]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateShares.amountToSpend]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_11, [_hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
     type: "number",
     inputmode: "decimal",
     pattern: "[0-9]*",
     min: "0.0",
     id: "pricePerShareInput",
     "class": "form-control",
-    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
       return $data.estimateShares.pricePerShare = $event;
     }),
     placeholder: "2.50"
   }, null, 512
   /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateShares.pricePerShare]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_24, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", _hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.numOfSharesResult), 1
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateShares.pricePerShare]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.numOfSharesResult), 1
   /* TEXT */
-  ), $options.hasNumOfShares ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
+  ), $options.hasNumOfShares ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
     href: "#",
-    onClick: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+    onClick: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
       return $options.copyNumOfSharesResult && $options.copyNumOfSharesResult.apply($options, arguments);
     }, ["prevent", "stop"]))
-  }, [_hoisted_28])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_29, [_hoisted_30]))])])])])])])])])]);
+  }, [_hoisted_18])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_19, [_hoisted_20]))])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("form", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+    type: "number",
+    inputmode: "decimal",
+    pattern: "[0-9]*",
+    min: "0.0",
+    id: "numOfSharesInput",
+    "class": "form-control",
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+      return $data.estimateProfit.numShares = $event;
+    }),
+    placeholder: "125"
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateProfit.numShares]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+    type: "number",
+    inputmode: "decimal",
+    pattern: "[0-9]*",
+    min: "0.0",
+    id: "projectedPriceInput",
+    "class": "form-control",
+    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+      return $data.estimateProfit.projectedPrice = $event;
+    }),
+    placeholder: "2.50"
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.estimateProfit.projectedPrice]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_28, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.estimateProfitResult), 1
+  /* TEXT */
+  )])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_31, [_hoisted_32, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("form", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_33, [_hoisted_34, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+    type: "number",
+    inputmode: "decimal",
+    pattern: "[0-9]*",
+    min: "0.0",
+    id: "amountSpentInput",
+    "class": "form-control",
+    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+      return $data.calculatePricePerShare.amountSpent = $event;
+    }),
+    placeholder: "123.45"
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.calculatePricePerShare.amountSpent]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_35, [_hoisted_36, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("input", {
+    type: "number",
+    inputmode: "decimal",
+    pattern: "[0-9]*",
+    min: "0.0",
+    id: "numOfSharesBoughtInput",
+    "class": "form-control",
+    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
+      return $data.calculatePricePerShare.numSharesBought = $event;
+    }),
+    placeholder: "10250"
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.calculatePricePerShare.numSharesBought]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_38, [_hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", _hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.numOfSharesBoughtResult), 1
+  /* TEXT */
+  )])])])])])])])])]);
 }
 
 /***/ }),

@@ -6,13 +6,18 @@
             <div class="row">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="profitEstimateTab" data-bs-toggle="tab" data-bs-target="#profitEstimatePane" type="button" role="tab" aria-controls="profitEstimatePane" aria-selected="true">
+                        <button class="nav-link active" id="sharesEstimateTab" data-bs-toggle="tab" data-bs-target="#sharesEstimatePane" type="button" role="tab" aria-controls="sharesEstimatePane" aria-selected="true">
+                            Shares
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profitEstimateTab" data-bs-toggle="tab" data-bs-target="#profitEstimatePane" type="button" role="tab" aria-controls="profitEstimatePane" aria-selected="false">
                             Projection
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="sharesEstimateTab" data-bs-toggle="tab" data-bs-target="#sharesEstimatePane" type="button" role="tab" aria-controls="sharesEstimatePane" aria-selected="false">
-                            Shares
+                        <button class="nav-link" id="reverseTab" data-bs-toggle="tab" data-bs-target="#reversePane" type="button" role="tab" aria-controls="reversePane" aria-selected="false">
+                            Reverse
                         </button>
                     </li>
                 </ul>
@@ -21,27 +26,7 @@
             <div class="row">
                 <div class="tab-content bg-gray" id="myTabContent">
 
-                    <div class="tab-pane fade show active p-4 text-white" id="profitEstimatePane" role="tabpanel" aria-labelledby="home-tab">
-                        <p>How much will my shares be worth if it hits x amount?</p>
-                        <form>
-                            <div class="mb-3">
-                                <label for="numOfSharesInput" class="form-label"># of Shares</label>
-                                <input type="number" inputmode="decimal" pattern="[0-9]*" min="0.0" id="numOfSharesInput" class="form-control" v-model="estimateProfit.numShares" placeholder="125" />
-                            </div>
-                            <div class="mb-3">
-                                <label for="projectedPriceInput" class="form-label">Projected Price</label>
-                                <input type="number" inputmode="decimal" pattern="[0-9]*" min="0.0" id="projectedPriceInput" class="form-control" v-model="estimateProfit.projectedPrice" placeholder="2.50" />
-                            </div>
-                            <div class="mt-4">
-                                <p class="text-white">
-                                    <strong>Result:</strong>
-                                    <span class="ps-2 text-green">{{ estimateProfitResult }}</span>
-                                </p>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="tab-pane fade p-4 text-white" id="sharesEstimatePane" role="tabpanel" aria-labelledby="profile-tab">
+                    <div class="tab-pane fade show active p-4 text-white" id="sharesEstimatePane" role="tabpanel" aria-labelledby="sharesEstimateTab">
                         <p>How many shares can I buy with x amount?</p>
                         <form>
                             <div class="mb-3">
@@ -61,8 +46,47 @@
                                     <span v-else><i class="fas fa-copy" style="opacity:0;"></i></span>
                                 </p>
                             </div>
+                        </form>
+                    </div>
 
+                    <div class="tab-pane fade show p-4 text-white" id="profitEstimatePane" role="tabpanel" aria-labelledby="profitEstimateTab">
+                        <p>How much will my shares be worth if it hits x amount?</p>
+                        <form>
+                            <div class="mb-3">
+                                <label for="numOfSharesInput" class="form-label"># of Shares</label>
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" min="0.0" id="numOfSharesInput" class="form-control" v-model="estimateProfit.numShares" placeholder="125" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="projectedPriceInput" class="form-label">Projected Price</label>
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" min="0.0" id="projectedPriceInput" class="form-control" v-model="estimateProfit.projectedPrice" placeholder="2.50" />
+                            </div>
+                            <div class="mt-4">
+                                <p class="text-white">
+                                    <strong>Result:</strong>
+                                    <span class="ps-2 text-green">{{ estimateProfitResult }}</span>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
 
+                    <div class="tab-pane fade p-4 text-white" id="reversePane" role="tabpanel" aria-labelledby="reverseTab">
+                        <p>Reverse calculate the price per share after purchase.</p>
+                        <form>
+                            <div class="mb-3">
+                                <label for="amountSpentInput" class="form-label">Amount</label>
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" min="0.0" id="amountSpentInput" class="form-control" v-model="calculatePricePerShare.amountSpent" placeholder="123.45" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="numOfSharesBoughtInput" class="form-label"># of Shares</label>
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" min="0.0" id="numOfSharesBoughtInput" class="form-control" v-model="calculatePricePerShare.numSharesBought" placeholder="10250" />
+                            </div>
+
+                            <div class="mt-4">
+                                <p class="text-white">
+                                    <strong>Result:</strong>
+                                    <span id="numOfSharesBoughtResult" class="ps-2 text-green">{{ numOfSharesBoughtResult }}</span>
+                                </p>
+                            </div>
                         </form>
                     </div>
 
@@ -82,6 +106,7 @@ export default {
         return {
             'estimateProfitResult': '$0.00',
             'numOfSharesResult': '0',
+            'numOfSharesBoughtResult': '0',
 
             'estimateProfit': {
                 'numShares': '',
@@ -93,7 +118,10 @@ export default {
                 'pricePerShare': '',
             },
 
-
+            'calculatePricePerShare': {
+                'amountSpent': '',
+                'numSharesBought': '',
+            },
 
         }
     },
@@ -116,6 +144,13 @@ export default {
             deep: true,
             handler() {
                 this.recalculateEstimatedShares();
+            }
+        },
+
+        calculatePricePerShare: {
+            deep: true,
+            handler() {
+                this.recalculatePricePerShare();
             }
         },
 
@@ -157,6 +192,15 @@ export default {
                 this.numOfSharesResult = res;
             } else {
                 this.numOfSharesResult = 0;
+            }
+        },
+
+        recalculatePricePerShare() {
+            if ( (this.calculatePricePerShare.amountSpent > 0) && (this.calculatePricePerShare.numSharesBought > 0) ) {
+                var res = this.calculatePricePerShare.amountSpent / this.calculatePricePerShare.numSharesBought;
+                this.numOfSharesBoughtResult = res;
+            } else {
+                this.numOfSharesBoughtResult = 0;
             }
         },
     },
