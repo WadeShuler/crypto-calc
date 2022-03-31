@@ -1,1 +1,4 @@
 /node_modules
+*.bak
+_bak_*
+_notes.md
